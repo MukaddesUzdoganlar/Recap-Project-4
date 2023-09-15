@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 
 function Form({ onAddActivity }) {
   const [formData, setFormData] = useState({
-    name: "",
+    name: '',
     isForGoodWeather: false,
   });
 
@@ -11,7 +11,6 @@ function Form({ onAddActivity }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Extract form data
     const { name, isForGoodWeather } = formData;
 
     onAddActivity({
@@ -19,7 +18,7 @@ function Form({ onAddActivity }) {
       isForGoodWeather,
     });
 
-    setFormData({ name: "", isForGoodWeather: false });
+    setFormData({ name: '', isForGoodWeather: false });
     nameInputRef.current.focus();
   };
 
@@ -60,7 +59,7 @@ function Form({ onAddActivity }) {
         </label>
       </div>
       <div>
-        <button type="submit">Add Activity</button>
+        <button type="submit">Submit</button>
       </div>
     </form>
   );
