@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { uid } from "uid";
-import { List } from "./components/List";
 import { Form } from "./components/Form";
+import { List } from "./components/List";
+
 import useLocalStorageState from "use-local-storage-state";
 
 const URL = "https://example-apis.vercel.app/api/weather";
@@ -11,14 +12,18 @@ export default function App() {
   const [weather, setWeather] = useState(null);
 
   useEffect(() => {
-    const setActivities = useLocalStorageState.getItem("activities");
+    const setActivities =
+      useLocalStorageState.getWeatherInformation("activities");
     if (setActivities) {
       setActivities(JSON.parse(setActivities));
     }
   }, []);
 
   useEffect(() => {
-    useLocalStorageState.setItem("activities", JSON.stringify(activities));
+    useLocalStorageState.setActivities(
+      "activities",
+      JSON.stringify(activities)
+    );
   }, [activities]);
 
   async function getWeatherInformation() {
@@ -42,20 +47,20 @@ export default function App() {
   uid();
 
   const filteredActivities = activities.filter(
-    (activity) => activity.isForGoodWeather === isGoodWeather
+    (activity) => activity.isForGoodWeather === setWeather
   );
 
   return (
     <div className="App">
       <h1>Add new Activity:</h1>
-      <form onAddActivity={handleAddActivity} />
+      <Form onAddActivity={handleAddActivity} />
       <button
-        onClick={() => setIsGoodWeather((prev) => !prev)}
+        onClick={() => setWeather((prev) => !prev)}
         className="toggle-weather-button"
       >
         Change Weather
       </button>
-      <list activities={filteredActivities} isGoodWeather={isGoodWeather} />
+      <List activities={filteredActivities} isGoodWeather={weather} />
     </div>
   );
 }
