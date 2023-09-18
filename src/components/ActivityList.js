@@ -1,7 +1,6 @@
 import { ActivityListItem } from "./ActivityListItem";
 
 export function ActivityList({ activities, handleDeleteActivity, weather }) {
-  console.log(activities);
   return (
     <section>
       {weather.isGoodWeather ? (

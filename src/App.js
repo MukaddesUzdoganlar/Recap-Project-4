@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import uid from "uid";
 import { Form } from "./components/Form";
 import useLocalStorageState from "use-local-storage-state";
 import { ActivityList } from "./components/ActivityList";
+import { uid } from "uid";
+import { Weather } from "./components/Weather";
 
 function App() {
   const [weather, setWeather] = useState({});
@@ -19,6 +20,9 @@ function App() {
       setWeather(data);
     }
     fetchWeather();
+
+    const intervalID = setInterval(fetchWeather, 5000);
+    return () => clearInterval(intervalID);
   }, []);
 
   function handleSubmit(event) {
@@ -45,14 +49,15 @@ function App() {
     );
   }
   return (
-    <div>
+    <>
+      {weather !== undefined && <Weather weather={weather} />}
       <Form handleSubmit={handleSubmit} />
       <ActivityList
         activities={activities}
         handleDeleteActivity={handleDeleteActivity}
         weather={weather}
       />
-    </div>
+    </>
   );
 }
 

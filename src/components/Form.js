@@ -4,12 +4,12 @@ export function Form({ handleSubmit }) {
       <h2 className="form-title">Add new activity</h2>
       <form className="form" onSubmit={handleSubmit}>
         <div className="form-div">
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name">Name:</label>
           <input
             className="input-name"
             type="text"
             id="name"
-            placeholder="Activity"
+            placeholder=" Search for a activity"
             name="name"
           ></input>
         </div>
