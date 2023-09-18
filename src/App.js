@@ -1,66 +1,59 @@
 import React, { useEffect, useState } from "react";
-import { uid } from "uid";
+import uid from "uid";
 import { Form } from "./components/Form";
-import { List } from "./components/List";
-
 import useLocalStorageState from "use-local-storage-state";
+import { ActivityList } from "./components/ActivityList";
 
-const URL = "https://example-apis.vercel.app/api/weather";
-
-export default function App() {
-  const [activities, setActivities] = useState([]);
-  const [weather, setWeather] = useState(null);
-
-  useEffect(() => {
-    const setActivities =
-      useLocalStorageState.getWeatherInformation("activities");
-    if (setActivities) {
-      setActivities(JSON.parse(setActivities));
-    }
-  }, []);
+function App() {
+  const [weather, setWeather] = useState({});
+  const [activities, setActivities] = useLocalStorageState("activities", {
+    defaultValue: [],
+  });
 
   useEffect(() => {
-    useLocalStorageState.setActivities(
-      "activities",
-      JSON.stringify(activities)
-    );
-  }, [activities]);
+    const url = "https://example-apis.vercel.app/api/weather";
 
-  async function getWeatherInformation() {
-    try {
-      const response = await fetch(URL);
+    async function fetchWeather() {
+      const response = await fetch(url);
       const data = await response.json();
       setWeather(data);
-    } catch (error) {
-      console.log(error);
     }
+    fetchWeather();
+  }, []);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+
+    let newData = {};
+
+    if (data.isChecked) {
+      newData = { ...data, isForGoodWeather: true, id: uid() };
+    } else {
+      newData = { ...data, isForGoodWeather: false, id: uid() };
+    }
+
+    setActivities([...activities, newData]);
+    event.target.reset();
+    event.target.name.focus();
   }
-  getWeatherInformation();
 
-  const handleAddActivity = (newActivity) => {
-    setActivities((prevActivities) => [
-      ...prevActivities,
-      { id: uid(), ...newActivity },
-    ]);
-  };
-
-  uid();
-
-  const filteredActivities = activities.filter(
-    (activity) => activity.isForGoodWeather === setWeather
-  );
-
+  function handleDeleteActivity(activityToDelete) {
+    setActivities(
+      activities.filter((activity) => activity.id !== activityToDelete.id)
+    );
+  }
   return (
-    <div className="App">
-      <h1>Add new Activity:</h1>
-      <Form onAddActivity={handleAddActivity} />
-      <button
-        onClick={() => setWeather((prev) => !prev)}
-        className="toggle-weather-button"
-      >
-        Change Weather
-      </button>
-      <List activities={filteredActivities} isGoodWeather={weather} />
+    <div>
+      <Form handleSubmit={handleSubmit} />
+      <ActivityList
+        activities={activities}
+        handleDeleteActivity={handleDeleteActivity}
+        weather={weather}
+      />
     </div>
   );
 }
+
+export default App;

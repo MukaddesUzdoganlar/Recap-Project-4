@@ -1,68 +1,24 @@
-import React, { useState, useRef } from "react";
-
-function Form({ onAddActivity }) {
-  const [formData, setFormData] = useState({
-    name: '',
-    isForGoodWeather: false,
-  });
-
-  const nameInputRef = useRef();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const { name, isForGoodWeather } = formData;
-
-    onAddActivity({
-      name,
-      isForGoodWeather,
-    });
-
-    setFormData({ name: '', isForGoodWeather: false });
-    nameInputRef.current.focus();
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const inputValue = type === "checkbox" ? checked : value;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: inputValue,
-    }));
-  };
-
+export function Form({ handleSubmit }) {
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Add Activity</h2>
-      <div>
-        <label htmlFor="name">Name of Activity:</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          ref={nameInputRef}
-          required
-        />
-      </div>
-      <div>
-        <label>
+    <section>
+      <h2 className="form-title">Add new activity</h2>
+      <form className="form" onSubmit={handleSubmit}>
+        <div className="form-div">
+          <label htmlFor="name">Name</label>
           <input
-            type="checkbox"
-            name="isForGoodWeather"
-            checked={formData.isForGoodWeather}
-            onChange={handleInputChange}
-          />{" "}
-          Good Weather Activity
-        </label>
-      </div>
-      <div>
+            className="input-name"
+            type="text"
+            id="name"
+            placeholder="Activity"
+            name="name"
+          ></input>
+        </div>
+        <div className="form-div">
+          <label htmlFor="activity">Good Weather Activity</label>
+          <input type="checkbox" id="activity" name="isChecked"></input>
+        </div>
         <button type="submit">Submit</button>
-      </div>
-    </form>
+      </form>
+    </section>
   );
 }
-
-export default Form;
