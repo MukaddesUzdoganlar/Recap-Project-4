@@ -4,6 +4,7 @@ import useLocalStorageState from "use-local-storage-state";
 import { ActivityList } from "./components/ActivityList";
 import { uid } from "uid";
 import { Weather } from "./components/Weather";
+import "../src/style.css";
 
 function App() {
   const [weather, setWeather] = useState({});
